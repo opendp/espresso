@@ -203,7 +203,7 @@ class SpeechLSTMModel(FairseqEncoderDecoderModel):
             num_layers=args.encoder_rnn_layers,
             dropout_in=args.encoder_rnn_dropout_in,
             dropout_out=args.encoder_rnn_dropout_out,
-            bidirectional=args.encoder_rnn_bidirectional,
+            bidirectional=False,
             residual=args.encoder_rnn_residual,
             src_bucketed=(getattr(task.cfg, "num_batch_buckets", 0) > 0),
             max_source_positions=max_source_positions,
@@ -916,7 +916,7 @@ def base_architecture(args):
     )
     args.encoder_rnn_hidden_size = getattr(args, "encoder_rnn_hidden_size", 320)
     args.encoder_rnn_layers = getattr(args, "encoder_rnn_layers", 3)
-    args.encoder_rnn_bidirectional = getattr(args, "encoder_rnn_bidirectional", True)
+    args.encoder_rnn_bidirectional = getattr(args, "encoder_rnn_bidirectional", False)
     args.encoder_rnn_residual = getattr(args, "encoder_rnn_residual", False)
     args.decoder_embed_dim = getattr(args, "decoder_embed_dim", 48)
     args.decoder_embed_path = getattr(args, "decoder_embed_path", None)

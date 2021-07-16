@@ -134,8 +134,7 @@ def main(cfg: DictConfig) -> None:
     lr = trainer.get_lr()
     train_meter = meters.StopwatchMeter()
     train_meter.start()
-    cfg.optimization.min_lr = 0.001
-    while lr > cfg.optimization.min_lr and epoch_itr.next_epoch_idx <= max_epoch:
+    while lr > 0.0001 and epoch_itr.next_epoch_idx <= max_epoch:
         # train for one epoch
         valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
         if should_stop:

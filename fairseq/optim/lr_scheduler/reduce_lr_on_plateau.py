@@ -55,7 +55,7 @@ class ReduceLROnPlateauLRScheduleConfig(FairseqDataclass):
 @register_lr_scheduler(
     "reduce_lr_on_plateau", dataclass=ReduceLROnPlateauLRScheduleConfig
 )
-class ReduceLROnPlateauLRSchedule(FairseqLRScheduler):
+class ReduceLROnPlateau(FairseqLRScheduler):
     """
     Decay the LR by a factor every time the validation loss plateaus.
     Also comes with optional warmup phase, where we linearly increase

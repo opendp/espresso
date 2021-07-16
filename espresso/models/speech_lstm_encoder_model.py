@@ -279,7 +279,7 @@ def base_architecture(args):
     )
     args.encoder_rnn_hidden_size = getattr(args, "encoder_rnn_hidden_size", 320)
     args.encoder_rnn_layers = getattr(args, "encoder_rnn_layers", 3)
-    args.encoder_rnn_bidirectional = getattr(args, "encoder_rnn_bidirectional", True)
+    args.encoder_rnn_bidirectional = getattr(args, "encoder_rnn_bidirectional", False)
     args.encoder_rnn_residual = getattr(args, "encoder_rnn_residual", False)
     args.encoder_rnn_dropout_in = getattr(args, "encoder_rnn_dropout_in", args.dropout)
     args.encoder_rnn_dropout_out = getattr(args, "encoder_rnn_dropout_out", args.dropout)

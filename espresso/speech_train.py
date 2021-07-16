@@ -76,6 +76,11 @@ def main(cfg: DictConfig) -> None:
 
     # Build model and criterion
     model = task.build_model(cfg.model)
+
+    from opendp.network.odometer import PrivacyOdometer
+    odometer = PrivacyOdometer(step_epsilon=1.0)
+    model = odometer.make_tracked_view(model)
+
     criterion = task.build_criterion(cfg.criterion)
     logger.info(model)
     logger.info("task: {}".format(task.__class__.__name__))
@@ -129,7 +134,7 @@ def main(cfg: DictConfig) -> None:
     lr = trainer.get_lr()
     train_meter = meters.StopwatchMeter()
     train_meter.start()
-    while lr > cfg.optimization.min_lr and epoch_itr.next_epoch_idx <= max_epoch:
+    while lr > 0.00000001 and epoch_itr.next_epoch_idx <= max_epoch:
         # train for one epoch
         valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
         if should_stop:

@@ -14,6 +14,10 @@ import os
 import sys
 from typing import Dict, Optional, Any, List, Tuple, Callable
 
+from opacus.privacy_engine import PrivacyEngine
+# from opendp.network.odometer_reconstruction import ReconstructionPrivacyOdometer
+from torch.utils.data.dataloader import DataLoader
+
 # We need to setup root logger before importing any fairseq libraries.
 logging.basicConfig(
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
@@ -241,6 +245,18 @@ def train(
     itr = epoch_itr.next_epoch_itr(
         fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
         shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
+    )
+    print('TRAINING WITH PRIVACY.')
+    # trainer.odometer = ReconstructionPrivacyOdometer(step_epsilon=100.)
+    # trainer.odometer.track_(trainer.model)
+
+    trainer.engine = PrivacyEngine()
+    trainer._model, trainer._optimizer, _ = trainer.engine.make_private(
+        module=trainer.model,
+        optimizer=trainer.optimizer,
+        data_loader=DataLoader([[]]),
+        noise_multiplier=1.0,
+        max_grad_norm=1.0,
     )
     update_freq = (
         cfg.optimization.update_freq[epoch_itr.epoch - 1]

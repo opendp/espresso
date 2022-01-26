@@ -679,7 +679,21 @@ def LSTM(input_size, hidden_size, **kwargs):
 
 
 def LSTMCell(input_size, hidden_size, **kwargs):
-    m = nn.LSTMCell(input_size, hidden_size, **kwargs)
+    # ROUTE 1: from OpenDP
+    # from opendp.network.layers.lstm import DPLSTMCell as DPLSTMCellOpenDP
+    # LSTMCellProxy = DPLSTMCellOpenDP
+
+    # ROUTE 2: from Opacus
+    print("using opacus")
+    from opacus.layers.dp_rnn import DPLSTMCell as DPLSTMCellOpacus
+    def DPLSTMCellOpacusWrapper(input_size: int, hidden_size: int, bias: bool=True):
+        return DPLSTMCellOpacus(input_size, hidden_size, bias)
+    LSTMCellProxy = DPLSTMCellOpacusWrapper
+
+    # ROUTE 3: non-DP from PyTorch
+    # LSTMCellProxy = nn.LSTMCell
+
+    m = LSTMCellProxy(input_size, hidden_size, **kwargs)
     for name, param in m.named_parameters():
         if "weight" in name or "bias" in name:
             param.data.uniform_(-0.1, 0.1)

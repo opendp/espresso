@@ -65,6 +65,10 @@ class FairseqAdam(FairseqOptimizer):
         else:
             self._optimizer = Adam(params, **self.optimizer_config)
 
+        # this optimizer doesn't inherit from torch.optim.Optimizer
+        # so it has to be patched up to work with Opacus
+        self.state = None
+
     @property
     def optimizer_config(self):
         """
